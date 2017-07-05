@@ -158,6 +158,7 @@ while(True):
 
 cv2.destroyAllWindows()
 """
+"""
 import cv2
 import numpy as np
 
@@ -169,3 +170,125 @@ img[273:333,100:160] = lei
 #print img.dtype
 cv2.imshow('lei',img)
 cv2.waitKey(10000)
+"""
+'''
+import cv2
+flags = [i for i in dir(cv2) if i.startswith('COLOR_')]
+print flags
+'''
+"""
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+img1 = cv2.imread("E:\\CV\\wing\\wing.jpg")
+img2 = cv2.imread("E:\\CV\\wing\\opencv.jpg")
+
+rows,cols,channels = img2.shape
+roi = img1[0:rows,0:cols]
+
+img2gray = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
+cv2.imshow('mask_inv',img2gray)
+ret, mask = cv2.threshold(img2gray,100,255,cv2.THRESH_BINARY)
+cv2.imshow('mask',mask)
+
+mask_inv = cv2.bitwise_not(mask)
+img1_bg = cv2.bitwise_and(roi,roi,mask = mask_inv)
+
+img2_bg = cv2.bitwise_and(img2,img2,mask = mask)
+
+
+dst = cv2.add(img1_bg,img2_bg)
+img1[0:rows,0:cols] = dst
+
+cv2.imshow('res',img1)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+"""
+'''
+import cv2
+import numpy as np
+
+cap = cv2.VideoCapture(0)
+
+while(True):
+    ret,frame = cap.read()
+    hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
+    lower_blue = np.array([110,50,50])
+    upper_blue = np.array([130,255,255])
+    mask = cv2.inRange(frame, lower_blue, upper_blue)
+    res = cv2.bitwise_and(frame,frame,mask = mask)
+    
+    cv2.imshow('frame',frame)
+    cv2.imshow('mask',mask)
+    cv2.imshow('res',res)
+    k = cv2.waitKey(5) & 0xff
+    if k == 27:
+        break
+
+cv2.destroyAllWindows()
+'''
+"""
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+img1 = cv2.imread("E:\\CV\\wing\\wing.jpg")
+res = cv2.bitwise_and(src1, src2)
+"""
+"""
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+img = cv2.imread("E:\\CV\\wing\\wing.jpg",0)
+img = cv2.medianBlur(img,5)
+
+ret,th1 = cv2.threshold(img,127,255,cv2.THRESH_BINARY)
+
+th2 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,11,2)
+th3 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
+titles = ['original image','global thresholding(v = 127)',\
+          'adaptive mean thresholding','adaptive gaussian thresholding']
+images = [img,th1,th2,th3]
+
+for i in xrange(4):
+    plt.subplot(2,2,1+i)
+    plt.imshow(images[i],'gray')
+    plt.title(titles[i])
+    plt.xticks([])
+    plt.yticks([])
+plt.show()
+"""
+"""
+cv2.imshow('th1',th1)
+
+while(True):
+    k = cv2.waitKey(5) & 0xff
+    if k == 27:
+        break
+
+cv2.destroyAllWindows()
+"""
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+img = cv2.imread("E:\\CV\\wing\\wing.jpg")
+
+kernel = np.ones((5,5),np.float32)/25
+dst = cv2.filter2D(img,-1,kernel)
+
+plt.subplot(121)
+plt.imshow(img)
+plt.title('original')
+plt.xticks([])
+plt.yticks([])
+
+plt.subplot(122)
+plt.imshow(dst)
+plt.title('average')
+plt.xticks([])
+plt.yticks([])
+
+plt.show()
