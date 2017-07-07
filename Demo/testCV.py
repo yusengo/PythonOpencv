@@ -28,6 +28,7 @@ figure()
 hist(im.flatten(),128)
 show()
 """
+"""
 from PIL import Image
 from pylab import *
 
@@ -38,3 +39,10 @@ print 'please click 3 points'
 x = ginput(3)
 print 'you clicked :',x
 show()
+"""
+import cv2
+im = cv2.imread('wing.jpg')
+h,w = im.shape[:-1]
+print h,w
+
+#cv2.imwrite('')
